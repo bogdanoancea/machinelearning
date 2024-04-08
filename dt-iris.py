@@ -9,7 +9,8 @@ from sklearn.tree import export_graphviz
 from six import StringIO
 from IPython.display import Image
 import pydotplus
-
+import matplotlib.pyplot as plt
+import cv2
 
 data = load_iris()
 print('Classes to predict: ', data.target_names)
@@ -46,10 +47,13 @@ dot_data = StringIO()
 export_graphviz(tree_clf, out_file=dot_data,
                 filled=True, rounded=True,
                 special_characters=True,feature_names = iris.feature_names[2:], class_names=iris.target_names)
-graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+graph = pydotplus.graph_from_dot_data(dot_data.getvalue().replace("\n", ""))
 graph.write_png('iris.png')
 Image(graph.create_png())
 
+img = cv2.imread('iris.png')
+plt.matshow(img)
+plt.show()
 
 # predictions
 tree_clf.predict_proba([[5, 1.5]])

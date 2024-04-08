@@ -9,6 +9,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.tree import DecisionTreeRegressor
 
 # Visualizing the decision tree structure
+import matplotlib.pyplot as plt
+import cv2
 from sklearn.tree import export_graphviz
 from six import StringIO
 from IPython.display import Image
@@ -50,6 +52,10 @@ dot_data = StringIO()
 export_graphviz(model, out_file=dot_data,
                 filled=True, rounded=True,
                 special_characters=True,feature_names = ['Petrol_tax', 'Average_income', 'Paved_Highways', 'Population_Driver_licence(%)'])
-graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+graph = pydotplus.graph_from_dot_data(dot_data.getvalue().replace("\n", ""))
 graph.write_png('petroleum.png')
 Image(graph.create_png())
+
+img = cv2.imread('petroleum.png')
+plt.matshow(img)
+plt.show()
