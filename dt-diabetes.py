@@ -16,7 +16,7 @@ pima = pd.read_csv("diabetes.csv")
 pima.head()
 
 #split dataset in features and target variable
-feature_cols = ['Pregnancies', 'Insulin', 'BMI', 'Age','Glucose','BloodPressure','DiabetesPedigreeFunction']
+feature_cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
 X = pima[feature_cols] # Features
 y = pima.Outcome # Target variable
 
