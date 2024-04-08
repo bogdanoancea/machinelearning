@@ -1,8 +1,7 @@
 # Importing the libraries
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-%matplotlib inline
+
 
 # scikit-learn modules
 from sklearn.model_selection import train_test_split

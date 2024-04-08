@@ -3,13 +3,18 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifier
 from sklearn.model_selection import train_test_split # Import train_test_split function
 from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation
+from sklearn.tree import export_graphviz
+from six import StringIO
+
+from IPython.display import Image
+import pydotplus
 
 
-col_names = ['pregnant', 'glucose', 'bp', 'skin', 'insulin', 'bmi', 'pedigree', 'age', 'label']
 # load dataset
 #https://www.kaggle.com/uciml/pima-indians-diabetes-database
 pima = pd.read_csv("diabetes.csv")
 pima.head()
+
 #split dataset in features and target variable
 feature_cols = ['Pregnancies', 'Insulin', 'BMI', 'Age','Glucose','BloodPressure','DiabetesPedigreeFunction']
 X = pima[feature_cols] # Features
@@ -34,11 +39,6 @@ print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 #pip install graphviz
 #pip install pydotplus
-
-from sklearn.tree import export_graphviz
-from six import StringIO
-from IPython.display import Image
-import pydotplus
 
 dot_data = StringIO()
 export_graphviz(clf, out_file=dot_data,

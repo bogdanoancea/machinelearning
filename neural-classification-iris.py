@@ -32,4 +32,3 @@ predictions = mlp.predict(X_test)
 # Evaluating the model
 print(confusion_matrix(y_test, predictions))
 print(classification_report(y_test, predictions))
-´
