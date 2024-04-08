@@ -2,7 +2,7 @@ from sklearn.datasets import load_iris
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 # Visualizing the decision tree structure
 from sklearn.tree import export_graphviz
@@ -11,19 +11,25 @@ from IPython.display import Image
 import pydotplus
 
 
-iris = load_iris()
-X = iris.data[:, 2:] # petal length and width
+data = load_iris()
+print('Classes to predict: ', data.target_names)
+
+X = iris.data
 y = iris.target
+print('Number of examples in the data:', X.shape[0])
+#First four rows in the variable 'X'
+X[:4]
+
 # without train test splitting
-tree_clf = DecisionTreeClassifier(max_depth=4)
+tree_clf = DecisionTreeClassifier(criterion = 'entropy', max_depth=4)
 tree_clf.fit(X, y)
 
 
 #Predict the response for train dataset
-y_pred = tree_clf.predict(X_test)
+y_pred = tree_clf.predict(X_train)
 
 # Model Accuracy, how often is the classifier correct?
-print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+print("Accuracy:",metrics.accuracy_score(y_train, y_pred))
 
 
 export_graphviz(
@@ -53,9 +59,8 @@ tree_clf.predict([[5, 1.5]])
 
 
 # with train test splitting
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1) # 70% training and 30% test
-tree_clf = DecisionTreeClassifier()
+tree_clf = DecisionTreeClassifier(criterion='entropy')
 
 # Train Decision Tree Classifer
 tree_clf = tree_clf.fit(X_train,y_train)
@@ -69,3 +74,9 @@ print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 # Evaluating the model
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
+
+#optimization
+clf = DecisionTreeClassifier(criterion='entropy', min_samples_split=50)
+clf.fit(X_train, y_train)
+print('Accuracy Score on train data: ', accuracy_score(y_true=y_train, y_pred=clf.predict(X_train)))
+print('Accuracy Score on the test data: ', accuracy_score(y_true=y_test, y_pred=clf.predict(X_test)))
