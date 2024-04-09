@@ -3,7 +3,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-
+import numpy as np
 # Visualizing the decision tree structure
 from sklearn.tree import export_graphviz
 from six import StringIO
@@ -12,8 +12,8 @@ import pydotplus
 import matplotlib.pyplot as plt
 import cv2
 
-data = load_iris()
-print('Classes to predict: ', data.target_names)
+iris = load_iris()
+print('Classes to predict: ', iris.target_names)
 
 X = iris.data
 y = iris.target
@@ -27,10 +27,10 @@ tree_clf.fit(X, y)
 
 
 #Predict the response for train dataset
-y_pred = tree_clf.predict(X_train)
+y_pred = tree_clf.predict(X)
 
 # Model Accuracy, how often is the classifier correct?
-print("Accuracy:",metrics.accuracy_score(y_train, y_pred))
+print("Accuracy:",metrics.accuracy_score(y, y_pred))
 
 
 export_graphviz(
@@ -46,7 +46,7 @@ export_graphviz(
 dot_data = StringIO()
 export_graphviz(tree_clf, out_file=dot_data,
                 filled=True, rounded=True,
-                special_characters=True,feature_names = iris.feature_names[2:], class_names=iris.target_names)
+                special_characters=True,feature_names = iris.feature_names, class_names=iris.target_names)
 graph = pydotplus.graph_from_dot_data(dot_data.getvalue().replace("\n", ""))
 graph.write_png('iris.png')
 Image(graph.create_png())
@@ -56,10 +56,8 @@ plt.matshow(img)
 plt.show()
 
 # predictions
-tree_clf.predict_proba([[5, 1.5]])
-#array([[0, 0.90740741, 0.09259259]])
-tree_clf.predict([[5, 1.5]])
-#array([1])
+tree_clf.predict_proba([[5, 1.5, 1.4, 0.2]])
+tree_clf.predict(np.array([5, 1.5, 1.4, 0.2]).reshape(1,-1))
 
 
 # with train test splitting
