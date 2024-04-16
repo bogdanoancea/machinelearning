@@ -2,7 +2,6 @@
 import numpy as np
 import pandas as pd
 
-
 # scikit-learn modules
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
@@ -56,6 +55,7 @@ graph = pydotplus.graph_from_dot_data(dot_data.getvalue().replace("\n", ""))
 graph.write_png('petroleum.png')
 Image(graph.create_png())
 
+# with matplotlib
 img = cv2.imread('petroleum.png')
 plt.matshow(img)
 plt.show()

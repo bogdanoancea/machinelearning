@@ -1,13 +1,15 @@
 # Load libraries
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifier
-from sklearn.model_selection import train_test_split # Import train_test_split function
-from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
 from sklearn.tree import export_graphviz
 from six import StringIO
 
 from IPython.display import display, Image
 import pydotplus
+import matplotlib.pyplot as plt
+import cv2
 
 
 # load dataset
@@ -34,12 +36,11 @@ y_pred = clf.predict(X_test)
 
 # Model Accuracy, how often is the classifier correct?
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-
+print("Confusion matrix:",metrics.confusion_matrix(y_test, y_pred))
 
 
 #pip install graphviz
 #pip install pydotplus
-%matplotlib inline
 dot_data = StringIO()
 export_graphviz(clf, out_file=dot_data,
                 filled=True, rounded=True,
@@ -49,14 +50,10 @@ graph.write_png('diabetes.png')
 img = Image(graph.create_png())
 display(img)
 
-import matplotlib
-matplotlib.use('TKAgg')
-import matplotlib.pyplot as plt
-import cv2
 
+# with matplotlib
 img = cv2.imread('diabetes.png')
-%matplotlib inline
-plt.matshow(img)
+plt.imshow(img)
 plt.show()
 
 
@@ -71,6 +68,8 @@ y_pred = clf.predict(X_test)
 
 # Model Accuracy, how often is the classifier correct?
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+print("Confusion matrix:",metrics.confusion_matrix(y_test, y_pred))
+
 dot_data = StringIO()
 export_graphviz(clf, out_file=dot_data,
                 filled=True, rounded=True,
@@ -83,4 +82,4 @@ img = cv2.imread('diabetes2.png')
 plt.matshow(img)
 plt.show()
 
-#subprocess.call(['dot', '-Tpdf', 'tree.dot', '-o' 'tree.pdf'])
+#subprocess.call(['dot', '-Tpdf', 'dot_data.dot', '-o' 'tree.pdf'])
