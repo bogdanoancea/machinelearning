@@ -185,3 +185,95 @@ print("Accuracy:", accuracy)
 
 # Classification report
 print(classification_report(y_test, y_pred))
+
+import re
+from collections import Counter
+
+# Define character n-grams for each language
+language_ngrams = {
+    'english': {'unigrams': set('abcdefghijklmnopqrstuvwxyz'), 'bigrams': set(
+        [''.join(bigram) for bigram in zip('abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz')])},
+    'french': {'unigrams': set('abcdefghijklmnopqrstuvwxyzàâçéèêëîïôûùüÿñæœ'), 'bigrams': set(
+        [''.join(bigram) for bigram in
+         zip('abcdefghijklmnopqrstuvwxyzàâçéèêëîïôûùüÿñæœ', 'abcdefghijklmnopqrstuvwxyzàâçéèêëîïôûùüÿñæœ')])},
+    'spanish': {'unigrams': set('abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡'), 'bigrams': set([''.join(bigram) for bigram in
+                                                                                        zip('abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡',
+                                                                                            'abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡')])},
+    'german': {'unigrams': set('abcdefghijklmnopqrstuvwxyzäöüß'), 'bigrams': set(
+        [''.join(bigram) for bigram in zip('abcdefghijklmnopqrstuvwxyzäöüß', 'abcdefghijklmnopqrstuvwxyzäöüß')])},
+    'russian': {'unigrams': set('абвгдеёжзийклмнопрстуфхцчшщъыьэюя'), 'bigrams': set(
+        [''.join(bigram) for bigram in zip('абвгдеёжзийклмнопрстуфхцчшщъыьэюя', 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя')])},
+    'chinese': {'unigrams': set('你好吗'), 'bigrams': set([''.join(bigram) for bigram in zip('你好吗', '你好吗')])},
+    # Add more languages and their corresponding character n-grams as needed
+}
+
+
+# Define a function to calculate character n-gram frequencies for a given text
+def calculate_ngram_frequencies(text):
+    unigrams = [text[i:i + 1] for i in range(len(text) - 1)]
+    bigrams = [text[i:i + 2] for i in range(len(text) - 2)]
+    return Counter(unigrams), Counter(bigrams)
+
+
+# Define a function to detect the language from a given text
+def detect_language(text):
+    # Remove non-alphanumeric characters and whitespace
+    cleaned_text = re.sub(r'[^a-zA-Z\s]', '', text)
+
+    # Convert text to lowercase for case-insensitive matching
+    cleaned_text_lower = cleaned_text.lower()
+
+    # Calculate unigram and bigram frequencies for the cleaned text
+    unigram_freq, bigram_freq = calculate_ngram_frequencies(cleaned_text_lower)
+
+    # Initialize language detection result and similarity score
+    detected_language = 'unknown'
+    max_similarity_score = 0
+
+    # Iterate over language n-grams and calculate similarity scores
+    for language, ngrams in language_ngrams.items():
+        # Calculate Jaccard similarity scores for unigrams and bigrams
+        unigram_similarity = len(ngrams['unigrams'].intersection(unigram_freq.keys())) / len(
+            ngrams['unigrams'].union(unigram_freq.keys()))
+        bigram_similarity = len(ngrams['bigrams'].intersection(bigram_freq.keys())) / len(
+            ngrams['bigrams'].union(bigram_freq.keys()))
+
+        # Calculate overall similarity score as a weighted average of unigram and bigram similarities
+        similarity_score = (0.3 * unigram_similarity) + (0.7 * bigram_similarity)
+
+        # Update detected language if similarity score is higher
+        if similarity_score > max_similarity_score:
+            detected_language = language
+            max_similarity_score = similarity_score
+
+    return detected_language
+
+
+# Example text to test language detection
+text1 = "Hello, how are you?"
+text2 = "Bonjour, comment ça va?"
+text3 = "Hola, ¿cómo estás?"
+text4 = "Привет, как дела?"
+text5 = "你好，你好吗？"
+text6 = "مرحبا، كيف حالك؟"
+
+# Test language detection
+print("Text:", text1)
+print("Detected Language:", detect_language(text1))
+
+print("\nText:", text2)
+print("Detected Language:", detect_language(text2))
+
+print("\nText:", text3)
+print("Detected Language:", detect_language(text3))
+
+print("\nText:", text4)
+print("Detected Language:", detect_language(text4))
+
+print("\nText:", text5)
+print("Detected Language:", detect_language(text5))
+
+print("\nText:", text6)
+print("Detected Language:", detect_language(text6))
+
+´
